@@ -1,4 +1,4 @@
-import 'package:counter_with_bloc/bloc/counter_bloc_bloc.dart';
+import 'package:counter_with_bloc/bloc_freezed/counter_freezed/counter_freezed_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,38 +13,38 @@ class CounterScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          BlocBuilder<CounterBloc, CounterBlocState>(
+          BlocBuilder<CounterFreezedBloc, CounterFreezedState>(
             builder: (context, state) {
-              if (state is CounterBlocInitialState) {
-                return const Center(
-                  child: Text('value is : 0'),
-                );
-              } else if (state is CounterValueChangeState) {
+              return state.map(initial: (_) {
+                return const Center(child: Text('value is : 0'));
+              }, changeValue: (v) {
                 return Center(
-                  child: Text('value is : ${state.value}'),
+                  child: Text(v.value),
                 );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+              });
             },
           ),
           IconButton(
             onPressed: () {
-              context.read<CounterBloc>().add(AddCounterEvent());
+              context
+                  .read<CounterFreezedBloc>()
+                  .add(const CounterFreezedEvent.add());
             },
             icon: const Icon(Icons.add),
           ),
           IconButton(
             onPressed: () {
-              context.read<CounterBloc>().add(ResetEvent());
+              context
+                  .read<CounterFreezedBloc>()
+                  .add(const CounterFreezedEvent.reset());
             },
             icon: const Icon(Icons.exposure_zero),
           ),
           IconButton(
             onPressed: () {
-              context.read<CounterBloc>().add(RemovedCounterEvent());
+              context
+                  .read<CounterFreezedBloc>()
+                  .add(const CounterFreezedEvent.remove());
             },
             icon: const Icon(Icons.remove),
           ),
